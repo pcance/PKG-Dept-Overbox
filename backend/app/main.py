@@ -33,6 +33,7 @@ class SolveRequest(BaseModel):
     site: str           # "penang" or "debrecen"
     items: List[ItemInput]
     time_limit_per_box: float = 5.0
+    exclude_part_numbers: List[str] = []
 
 
 class LookupRequest(BaseModel):
@@ -93,7 +94,11 @@ def solve(req: SolveRequest):
 
     logger.info(f"Solving for {len(expanded_items)} items in {len(cartons)} cartons ({req.site})")
 
-    result = find_smallest_overbox(cartons, expanded_items, time_limit_per_box=req.time_limit_per_box)
+    result = find_smallest_overbox(
+        cartons, expanded_items,
+        time_limit_per_box=req.time_limit_per_box,
+        exclude_part_numbers=req.exclude_part_numbers,
+    )
 
     if result is None:
         return {

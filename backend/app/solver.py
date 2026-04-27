@@ -139,6 +139,7 @@ def find_smallest_overbox(
     cartons: List[Dict],
     items: List[Dict],
     time_limit_per_box: float = 5.0,
+    exclude_part_numbers: Optional[List[str]] = None,
 ) -> Optional[Dict]:
     """
     cartons: list of {part_number, description, length, width, depth}
@@ -147,6 +148,8 @@ def find_smallest_overbox(
     """
     if not items or not cartons:
         return None
+
+    excluded = set(exclude_part_numbers or [])
 
     # Sort cartons by volume ascending, then max-dim ascending
     def sort_key(c):
@@ -161,6 +164,8 @@ def find_smallest_overbox(
     total_item_vol = sum(l * w * d for l, w, d in item_dims)
 
     for carton in sorted_cartons:
+        if carton["part_number"] in excluded:
+            continue
         bin_dims = (carton["length"], carton["width"], carton["depth"])
         bin_vol = carton["length"] * carton["width"] * carton["depth"]
 

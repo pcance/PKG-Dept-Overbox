@@ -30,8 +30,8 @@ function isoProject(x: number, y: number, z: number, scale: number) {
 }
 
 export default function PackingViz({ placements, binL, binW, binD, view }: Props) {
-  const SVG_W = 480;
-  const SVG_H = 400;
+  const SVG_W = 600;
+  const SVG_H = 480;
   const PAD = 30;
 
   const sorted = useMemo(() => {
@@ -132,7 +132,7 @@ export default function PackingViz({ placements, binL, binW, binD, view }: Props
     };
 
     return (
-      <svg width={SVG_W} height={SVG_H} className="border border-gray-200 rounded bg-gray-50">
+      <svg viewBox={`0 0 ${SVG_W} ${SVG_H}`} width="100%" className="border border-gray-200 rounded bg-gray-50">
         {isoBox(0, 0, 0, binL, binW, binD, "#aaa", 0.05, "#555", 1.5)}
         {sorted.map((p, i) => (
           <g key={i}>
@@ -169,7 +169,7 @@ export default function PackingViz({ placements, binL, binW, binD, view }: Props
   const offY = PAD + ((SVG_H - 2 * PAD) - binH2 * scale) / 2;
 
   return (
-    <svg width={SVG_W} height={SVG_H} className="border border-gray-200 rounded bg-gray-50">
+    <svg viewBox={`0 0 ${SVG_W} ${SVG_H}`} width="100%" className="border border-gray-200 rounded bg-gray-50">
       <rect
         x={offX}
         y={offY}

@@ -16,8 +16,9 @@ export default function Home() {
   const [solving, setSolving] = useState(false);
   const [result, setResult] = useState<SolveResult | null>(null);
   const [solveError, setSolveError] = useState<string | null>(null);
+  const [excludedPNs, setExcludedPNs] = useState<string[]>([]);
 
-  async function handleSolve() {
+  async function handleSolve(excluded: string[] = []) {
     setSolving(true);
     setResult(null);
     setSolveError(null);
@@ -58,7 +59,7 @@ export default function Home() {
       const resp = await fetch(`${API_BASE}/solve`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ site, items }),
+        body: JSON.stringify({ site, items, exclude_part_numbers: excluded }),
       });
       const data = await resp.json();
       setResult(data);
@@ -69,6 +70,13 @@ export default function Home() {
     }
   }
 
+  function handleNextBest() {
+    if (!result?.overbox) return;
+    const newExcluded = [...excludedPNs, result.overbox.part_number];
+    setExcludedPNs(newExcluded);
+    handleSolve(newExcluded);
+  }
+
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
       <header className="bg-blue-700 text-white px-6 py-3 shadow">
@@ -77,7 +85,7 @@ export default function Home() {
       </header>
 
       <main className="flex flex-1 gap-4 p-4 overflow-hidden">
-        <div className="w-1/2 flex flex-col gap-4 overflow-y-auto">
+        <div className="w-2/5 flex flex-col gap-4 overflow-y-auto">
           <SiteSelector site={site} onChange={setSite} />
           <PasteBox
             apiBase={API_BASE}
@@ -114,7 +122,7 @@ export default function Home() {
           />
 
           <button
-            onClick={handleSolve}
+            onClick={() => { setExcludedPNs([]); handleSolve([]); }}
             disabled={solving}
             className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg disabled:opacity-50 transition"
           >
@@ -128,8 +136,8 @@ export default function Home() {
           )}
         </div>
 
-        <div className="w-1/2 overflow-y-auto">
-          <ResultsPanel result={result} solving={solving} />
+        <div className="w-3/5 overflow-y-auto">
+          <ResultsPanel result={result} solving={solving} onNextBest={handleNextBest} />
         </div>
       </main>
     </div>

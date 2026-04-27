@@ -6,9 +6,10 @@ import PackingViz from "./PackingViz";
 interface Props {
   result: SolveResult | null;
   solving: boolean;
+  onNextBest: () => void;
 }
 
-export default function ResultsPanel({ result, solving }: Props) {
+export default function ResultsPanel({ result, solving, onNextBest }: Props) {
   const [view, setView] = useState<"iso" | "top" | "left" | "right">("iso");
 
   if (solving) {
@@ -53,21 +54,31 @@ export default function ResultsPanel({ result, solving }: Props) {
 
   return (
     <div className="flex flex-col gap-4">
+      {/* Prominent PN banner */}
+      <div className="bg-blue-700 rounded-lg p-5 text-white shadow">
+        <p className="text-blue-200 text-xs uppercase tracking-widest font-semibold mb-1">Best Fitting Overbox</p>
+        <p className="text-4xl font-extrabold font-mono tracking-tight leading-none">{overbox.part_number}</p>
+        <p className="text-blue-100 text-sm mt-2">{overbox.description}</p>
+      </div>
+
       <div className="bg-white rounded-lg border border-gray-200 p-4">
-        <h2 className="font-bold text-gray-800 text-lg mb-3">Best Fitting Overbox</h2>
         <div className="grid grid-cols-2 gap-2 text-sm">
-          <div className="font-medium text-gray-600">Part Number</div>
-          <div className="font-mono font-bold text-blue-700">{overbox.part_number}</div>
-          <div className="font-medium text-gray-600">Description</div>
-          <div>{overbox.description}</div>
           <div className="font-medium text-gray-600">Internal Dims</div>
-          <div className="font-mono">{overbox.inner_cm.L} x {overbox.inner_cm.W} x {overbox.inner_cm.D} cm</div>
+          <div className="font-mono">{overbox.inner_cm.L} × {overbox.inner_cm.W} × {overbox.inner_cm.D} cm</div>
           <div className="font-medium text-gray-600">Packing Efficiency</div>
           <div>
             <span className="font-bold text-green-700">{efficiency.percent}%</span>
-            <span className="text-gray-500 text-xs ml-2">({efficiency.used_volume_cm3} / {efficiency.box_volume_cm3} cm3)</span>
+            <span className="text-gray-500 text-xs ml-2">({efficiency.used_volume_cm3} / {efficiency.box_volume_cm3} cm³)</span>
           </div>
         </div>
+
+        <button
+          onClick={onNextBest}
+          disabled={solving}
+          className="mt-4 w-full py-2 bg-gray-100 hover:bg-gray-200 border border-gray-300 text-gray-700 font-semibold rounded-lg text-sm disabled:opacity-50 transition"
+        >
+          {solving ? "Searching..." : "Next Best Box →"}
+        </button>
       </div>
 
       <div className="bg-white rounded-lg border border-gray-200 p-4">
