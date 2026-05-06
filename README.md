@@ -25,10 +25,10 @@ pip install -r requirements.txt
 In the same terminal (backend folder, venv active):
 
 ```cmd
-uvicorn app.main:app --reload --port 8000
+uvicorn app.main:app --reload --port 8000 --host 0.0.0.0
 ```
 
-You should see: `Uvicorn running on http://127.0.0.1:8000`
+You should see: `Uvicorn running on http://0.0.0.0:8000`
 
 ### 3. Install frontend dependencies
 
@@ -72,6 +72,6 @@ Add new rows to these CSVs to expand the catalog.
 
 ## Troubleshooting
 
-- **"Failed to connect to solver"**: Make sure the backend is running (`uvicorn app.main:app --reload --port 8000`)
+- **"Failed to connect to solver"**: Make sure the backend is running (`uvicorn app.main:app --reload --port 8000 --host 0.0.0.0`)
 - **"PN not found"**: The Part Number is not in `Outside_Dimensions.csv` — add it or use manual dims
 - **Solver is slow**: Increase the `time_limit_per_box` in the solve request, or reduce the number of items
