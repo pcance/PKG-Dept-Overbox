@@ -47,6 +47,9 @@ npm run dev
 
 Open your browser at [http://localhost:3000](http://localhost:3000).
 
+By default, the frontend proxies `/api/*` requests to `http://127.0.0.1:8000`.  
+If your backend runs elsewhere, set `BACKEND_URL` before starting the frontend.
+
 ## Usage
 
 1. **Select Site** — Choose Penang or Debrecen (determines the overbox candidate list).
@@ -73,5 +76,6 @@ Add new rows to these CSVs to expand the catalog.
 ## Troubleshooting
 
 - **"Failed to connect to solver"**: Make sure the backend is running (`uvicorn app.main:app --reload --port 8000 --host 0.0.0.0`)
+- **Users can open the app but lookups fail**: confirm the frontend can reach the backend target (`BACKEND_URL`, default `http://127.0.0.1:8000`)
 - **"PN not found"**: The Part Number is not in `Outside_Dimensions.csv` — add it or use manual dims
 - **Solver is slow**: Increase the `time_limit_per_box` in the solve request, or reduce the number of items
