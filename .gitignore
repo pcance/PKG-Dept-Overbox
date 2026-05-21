@@ -20,3 +20,6 @@ build/
 # OS
 .DS_Store
 Thumbs.db
+
+# App runtime logs
+solve_events.log

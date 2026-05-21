@@ -1,15 +1,15 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SiteSelector from "@/components/SiteSelector";
 import ItemsGrid from "@/components/ItemsGrid";
 import PasteBox from "@/components/PasteBox";
 import ResultsPanel from "@/components/ResultsPanel";
-import { ItemRow, SolveResult } from "@/types";
+import { ItemRow, SiteKey, SolveResult } from "@/types";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || "/api";
 
 export default function Home() {
-  const [site, setSite] = useState<"penang" | "debrecen">("penang");
+  const [site, setSite] = useState<SiteKey>("penang");
   const [rows, setRows] = useState<ItemRow[]>([
     { id: 1, mode: "pn", pn: "", length: "", width: "", depth: "", quantity: 1, resolved: null, error: null },
   ]);
@@ -17,6 +17,24 @@ export default function Home() {
   const [result, setResult] = useState<SolveResult | null>(null);
   const [solveError, setSolveError] = useState<string | null>(null);
   const [excludedPNs, setExcludedPNs] = useState<string[]>([]);
+  const [totalSolutions, setTotalSolutions] = useState<number | null>(null);
+
+  async function refreshSolutionCount() {
+    try {
+      const resp = await fetch(`${API_BASE}/stats/solutions`);
+      if (!resp.ok) return;
+      const data: { approx_solution_count?: number } = await resp.json();
+      if (typeof data.approx_solution_count === "number") {
+        setTotalSolutions(data.approx_solution_count);
+      }
+    } catch {
+      // no-op
+    }
+  }
+
+  useEffect(() => {
+    refreshSolutionCount();
+  }, []);
 
   async function handleSolve(excluded: string[] = []) {
     setSolving(true);
@@ -63,6 +81,7 @@ export default function Home() {
       });
       const data = await resp.json();
       setResult(data);
+      refreshSolutionCount();
     } catch {
       setSolveError("Failed to connect to solver. Make sure the backend is running.");
     } finally {
@@ -140,6 +159,9 @@ export default function Home() {
           <ResultsPanel result={result} solving={solving} onNextBest={handleNextBest} />
         </div>
       </main>
+      <footer className="px-6 py-2 text-xs text-gray-500 border-t border-gray-200 bg-white">
+        Approx total solutions generated: {totalSolutions ?? "..."}
+      </footer>
     </div>
   );
 }

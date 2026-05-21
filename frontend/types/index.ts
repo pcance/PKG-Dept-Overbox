@@ -1,3 +1,5 @@
+export type SiteKey = "penang" | "debrecen" | "global";
+
 export interface ResolvedDims {
   description: string;
   length: number;

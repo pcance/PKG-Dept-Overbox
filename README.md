@@ -52,7 +52,7 @@ If your backend runs elsewhere, set `BACKEND_URL` before starting the frontend.
 
 ## Usage
 
-1. **Select Site** — Choose Penang or Debrecen (determines the overbox candidate list).
+1. **Select Site** — Choose Penang, Debrecen, or Global (determines the overbox candidate list).
 2. **Add Items** — Either:
    - Click **+ Add Part # Row** and enter a Part Number from `Outside_Dimensions.csv`
    - Click **+ Add Manual Dims Row** and enter L/W/D in cm (tab between cells)
@@ -70,8 +70,14 @@ If your backend runs elsewhere, set `BACKEND_URL` before starting the frontend.
 | `Outside_Dimensions.csv` | Part number outside dimensions (cm) |
 | `Penang_Cartons.csv` | Penang overbox internal dimensions (cm) |
 | `debrecen_cartons.csv` | Debrecen overbox internal dimensions (cm) |
+| `Global_Cartons.csv` / `Global_Cartons.CSV` | Global overbox internal dimensions (cm) |
 
 Add new rows to these CSVs to expand the catalog.
+
+## Approximate Solution Counter
+
+- The backend appends one JSON line per `/solve` call to `solve_events.log`.
+- The UI footer shows an approximate total by counting lines in this log file.
 
 ## Troubleshooting
 

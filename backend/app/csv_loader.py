@@ -33,8 +33,25 @@ def load_outside_dimensions():
 
 @lru_cache(maxsize=None)
 def load_cartons(site: str):
-    filename = "Penang_Cartons.csv" if site.lower() == "penang" else "debrecen_cartons.csv"
-    path = _csv_path(filename)
+    site_key = site.lower()
+    site_files = {
+        "penang": ["Penang_Cartons.csv"],
+        "debrecen": ["debrecen_cartons.csv"],
+        "global": ["Global_Cartons.csv", "Global_Cartons.CSV"],
+    }
+    candidates = site_files.get(site_key, [])
+    if not candidates:
+        return []
+
+    path = None
+    for filename in candidates:
+        candidate_path = _csv_path(filename)
+        if os.path.exists(candidate_path):
+            path = candidate_path
+            break
+    if path is None:
+        return []
+
     result = []
     with open(path, newline="", encoding="utf-8-sig") as f:
         reader = csv.DictReader(f)
