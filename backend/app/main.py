@@ -57,8 +57,9 @@ def lookup_parts(req: LookupRequest):
     result = {}
     for pn in req.part_numbers:
         pn_stripped = pn.strip()
-        if pn_stripped in dims:
-            result[pn_stripped] = dims[pn_stripped]
+        pn_lookup = pn_stripped.upper()
+        if pn_lookup in dims:
+            result[pn_stripped] = dims[pn_lookup]
         else:
             result[pn_stripped] = None
     return result

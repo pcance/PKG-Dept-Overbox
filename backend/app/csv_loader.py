@@ -23,7 +23,7 @@ def load_outside_dimensions():
                 d = float(row["Outside Depth"])
             except (ValueError, KeyError):
                 continue
-            result[pn] = {
+            result[pn.upper()] = {
                 "description": row.get("Description", "").strip(),
                 "length": l,
                 "width": w,
