@@ -23,3 +23,8 @@ Thumbs.db
 
 # App runtime logs
 solve_events.log
+
+# .NET / WPF
+**/bin/
+**/obj/
+.vs/
