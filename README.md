@@ -2,6 +2,44 @@
 
 A local web app to find the **smallest single overbox** that fits a list of boxes, using **OR-Tools CP-SAT** 3D bin packing.
 
+## Windows Native App (WPF) - Migration Start
+
+This repository now also includes a new WPF project at:
+
+- `windows/OverboxFinder.Desktop`
+
+This is an incremental first step toward a native Windows desktop app.  
+The existing `frontend/` + `backend/` web app remains available during migration.
+
+### WPF setup and run (Windows)
+
+Prerequisites:
+
+- .NET SDK 10.0+ with Windows desktop workload
+
+From repo root:
+
+```powershell
+dotnet restore .\windows\OverboxFinder.Desktop\OverboxFinder.Desktop.csproj
+dotnet build .\windows\OverboxFinder.Desktop\OverboxFinder.Desktop.csproj
+dotnet run --project .\windows\OverboxFinder.Desktop\OverboxFinder.Desktop.csproj
+```
+
+### CSV strategy in the WPF app (initial)
+
+The WPF app introduces a **local source + local cache** workflow:
+
+1. Configure `CSV source folder` (typically a OneDrive-synced SharePoint folder on the local machine).
+2. Configure `Local cache folder` (defaults to `%LOCALAPPDATA%\\OverboxFinder\\csv-cache`).
+3. Click **Refresh Cache From Source**.
+4. Run desktop workflows from local cached CSV files.
+
+SharePoint authoritative folder (for users/admins):
+
+- `https://emerson.sharepoint.com/sites/TM-Packaging/Shared%20Documents/Forms/AllItems.aspx?id=%2Fsites%2FTM%2DPackaging%2FShared%20Documents%2FReference%20Material%2FBox%20Dimensions&viewid=a9b76a31%2D3107%2D424f%2Dbc71%2D7020813488c8`
+
+This first PR intentionally avoids full direct SharePoint API integration and focuses on a pragmatic local-folder/cache approach.
+
 ## Prerequisites
 
 - **Python 3.10+** (download from [python.org](https://www.python.org/downloads/))
